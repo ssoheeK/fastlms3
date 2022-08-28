@@ -11,6 +11,7 @@ import com.zerobase.fastlms.member.exception.MemberNotEmailAuthException;
 import com.zerobase.fastlms.member.exception.MemberStopUserException;
 import com.zerobase.fastlms.member.model.MemberInput;
 import com.zerobase.fastlms.member.model.ResetPasswordInput;
+import com.zerobase.fastlms.member.repository.MemberLoginHistoryRepository;
 import com.zerobase.fastlms.member.repository.MemberRepository;
 import com.zerobase.fastlms.member.service.MemberService;
 import com.zerobase.fastlms.util.PasswordUtils;
@@ -36,6 +37,7 @@ import java.util.UUID;
 public class MemberServiceImpl implements MemberService {
     
     private final MemberRepository memberRepository;
+    private final MemberLoginHistoryRepository memberLoginHistoryRepository;
     private final MailComponents mailComponents;
     
     private final MemberMapper memberMapper;
@@ -140,8 +142,6 @@ public class MemberServiceImpl implements MemberService {
         }
         
         return list;
-        
-        //return memberRepository.findAll();
     }
     
     @Override
@@ -153,8 +153,10 @@ public class MemberServiceImpl implements MemberService {
         }
         
         Member member = optionalMember.get();
+        MemberDto memberDto = MemberDto.of(member);
+        memberLoginHistoryRepository.findByUserId(member.getUserId()).ifPresent(memberDto::setLoginHistoryList);
         
-        return MemberDto.of(member);
+        return memberDto;
     }
     
     @Override

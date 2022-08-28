@@ -2,15 +2,25 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/minicampus?serverTimezone=Asia/Seoul
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: thehd123
+    username: a
+    password: a
   
   jpa:
     generate-ddl: true
     hibernate:
       ddl-auto: update
     show-sql: true
-    
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: a
+    password: a
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
             
 logging:
   level:

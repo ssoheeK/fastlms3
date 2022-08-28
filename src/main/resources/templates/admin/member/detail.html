@@ -12,6 +12,15 @@
             border:solid 1px #000;
         }
 
+        .login-thread {
+            background-color: black;
+            color: white;
+        }
+
+        .detail2 {
+            margin-top: 25px;
+        }
+
     </style>
 </head>
 <body>
@@ -101,9 +110,35 @@
 
         </div>
 
-
+        <div class="detail detail2">
+            <table>
+                <thead class="login-thread">
+                    <tr>
+                        <th>NO</th>
+                        <th>로그인 일자</th>
+                        <th>접속 IP</th>
+                        <th>접속 UserAgent</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="y, i : ${member.loginHistoryList}">
+                        <td>
+                            <p th:text="${i.index + 1}"></p>
+                        </td>
+                        <td>
+                            <p th:text="${y.regDt}"></p>
+                        </td>
+                        <td>
+                            <p th:text="${y.ipAddr}"></p>
+                        </td>
+                        <td>
+                            <p th:text="${y.userAgent}"></p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-
 
 </body>
 </html>

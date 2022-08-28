@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @RequiredArgsConstructor
@@ -20,6 +21,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final MemberService memberService;
+
+    private final UserAuthenticationSuccessHandler userAuthenticationSuccessHandler;
 
     @Bean
     PasswordEncoder getPasswordEncoder() {
@@ -30,7 +33,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     UserAuthenticationFailureHandler getFailureHandler() {
         return new UserAuthenticationFailureHandler();
     }
-    
+
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/favicon.ico", "/files/**");
@@ -52,7 +55,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         , "/member/find-password"
                 )
                 .permitAll();
-    
+
         http.authorizeRequests()
                 .antMatchers("/admin/**")
                 .hasAuthority("ROLE_ADMIN");
@@ -60,13 +63,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.formLogin()
                 .loginPage("/member/login")
                 .failureHandler(getFailureHandler())
+                .successHandler(userAuthenticationSuccessHandler)
                 .permitAll();
 
         http.logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
                 .logoutSuccessUrl("/")
                 .invalidateHttpSession(true);
-        
+
         http.exceptionHandling()
                 .accessDeniedPage("/error/denied");
 
